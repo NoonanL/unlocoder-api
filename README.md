@@ -5,8 +5,9 @@
 <h1 align="center">Unlocoder</h1>
 
 <p align="center">
-  Precision coordinate conversion and UN/LOCODE timezone API.<br/>
-  Convert between DD, DMS, UTM, MGRS, and Plus Code instantly.
+  Coordinate conversion and UN/LOCODE timezone API.<br/>
+  Convert between DD, DMS, UTM, MGRS, and Plus Code. Look up any UN/LOCODE<br/>
+  for timezone, coordinates, elevation, and nearby locations.
 </p>
 
 <p align="center">
@@ -21,7 +22,7 @@
 
 ## What is Unlocoder?
 
-Unlocoder is a coordinate conversion tool and UN/LOCODE lookup API. Paste any coordinate format and get every other format back instantly.
+Unlocoder is a coordinate conversion tool and one of the few UN/LOCODE APIs available online. Convert any coordinate format instantly, or look up any of the 100,000+ UN/LOCODEs for timezone, elevation, and nearby location data.
 
 **Web converter** &mdash; free, no sign-up, no ads: [unlocoder.com](https://unlocoder.com)
 
@@ -47,8 +48,18 @@ Unlocoder is a coordinate conversion tool and UN/LOCODE lookup API. Paste any co
 - **Configurable precision** &mdash; 4 to 10 decimal places
 - **UN/LOCODE enrichment** &mdash; timezone, UTC offset, local time, elevation, and nearby locations
 - **Nearby UN/LOCODE search** &mdash; find the closest ports/locations to any coordinate
-- **Sub-100ms responses** &mdash; aggressive caching, optimised queries
 - **MCP support** &mdash; connect AI agents (Claude, GPT, etc.) to Unlocoder as a tool via the Model Context Protocol
+
+### UN/LOCODE Data
+
+Programmatic access to UN/LOCODE data is surprisingly hard to find online. Unlocoder provides dedicated endpoints for:
+
+- **UN/LOCODE lookup** &mdash; resolve any code (e.g. `GBLON`, `USNYC`) to coordinates, timezone, UTC offset, local time, and elevation
+- **Nearby search** &mdash; find the closest UN/LOCODEs to any coordinate pair (up to 3 results within 5000km)
+- **Enriched data** &mdash; goes beyond the raw UNECE directory with timezone resolution, elevation, and confidence scoring
+- **Continuously updated** &mdash; ingested from official UNECE sources, not static CSV dumps
+
+Ideal for logistics platforms, freight forwarders, customs software, TMS/WMS systems, and any application that works with international trade locations.
 
 ---
 
@@ -132,7 +143,7 @@ POST /api/convert
 
 ### Lookup UN/LOCODE
 
-Get timezone, coordinates, and metadata for a UN/LOCODE.
+Get timezone, coordinates, and metadata for any UN/LOCODE. One of the few publicly available APIs for UN/LOCODE data.
 
 ```
 GET /unlocodes/{code}
@@ -143,17 +154,33 @@ GET /unlocodes/{code}
 | `code` | path | UN/LOCODE, e.g. `GBLON` or `GB LON` |
 | `referenceTime` | query | Optional ISO 8601 datetime for historical timezone offset |
 
-**Response includes:** country, location name, subdivision, coordinates, timezone ID, UTC offset, local time, confidence score, and enrichment timestamp.
+**Response includes:** country, location name, subdivision, coordinates, timezone ID, UTC offset, local time, elevation, confidence score, and enrichment timestamp.
+
+**Example:**
+
+```bash
+curl "https://unlocoder.p.rapidapi.com/unlocodes/GBLON" \
+  -H "x-rapidapi-key: YOUR_API_KEY" \
+  -H "x-rapidapi-host: unlocoder.p.rapidapi.com"
+```
 
 ### Find Nearby UN/LOCODEs
 
-Find the closest UN/LOCODEs to a coordinate pair.
+Find the closest ports, airports, and freight terminals to any coordinate.
 
 ```
 GET /unlocodes/nearby?latitude={lat}&longitude={lng}
 ```
 
-Returns up to 3 results within a 5000km radius, sorted by distance.
+Returns up to 3 UN/LOCODEs within a 5000km radius, sorted by distance. Useful for identifying the nearest port or terminal to a vessel, warehouse, or delivery point.
+
+**Example:**
+
+```bash
+curl "https://unlocoder.p.rapidapi.com/unlocodes/nearby?latitude=40.7128&longitude=-74.0060" \
+  -H "x-rapidapi-key: YOUR_API_KEY" \
+  -H "x-rapidapi-host: unlocoder.p.rapidapi.com"
+```
 
 ---
 
