@@ -178,7 +178,7 @@ Full working examples in multiple languages:
 | Pro | $9/mo | 2,500 | 10 req/sec |
 | Enterprise | Custom | Custom | Custom |
 
-The web converter at [unlocoder.com](https://unlocoder.com) is always free with no limits.
+The web converter at [unlocoder.com](https://unlocoder.com) is always free (rate-limited to reasonable use).
 
 ---
 
