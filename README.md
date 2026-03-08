@@ -5,9 +5,9 @@
 <h1 align="center">Unlocoder</h1>
 
 <p align="center">
-  Coordinate conversion and UN/LOCODE timezone API.<br/>
+  Coordinate conversion and enriched UN/LOCODE API.<br/>
   Convert between DD, DMS, UTM, MGRS, and Plus Code. Look up any UN/LOCODE<br/>
-  for timezone, coordinates, elevation, and nearby locations.
+  for timezone, coordinates, elevation, IATA codes, and nearby locations.
 </p>
 
 <p align="center">
@@ -22,13 +22,13 @@
 
 ## What is Unlocoder?
 
-Unlocoder is a coordinate conversion tool and one of the few UN/LOCODE APIs available online. Convert any coordinate format instantly, or look up any of the 100,000+ UN/LOCODEs for timezone, elevation, and nearby location data.
+Unlocoder is a coordinate conversion tool and one of the few UN/LOCODE APIs available online. Convert any coordinate format instantly, or look up any of 114,000+ UN/LOCODEs for timezone, elevation, IATA codes, function codes, and nearby location data.
 
-**Web converter** &mdash; free, no sign-up, no ads: [unlocoder.com](https://unlocoder.com)
+**Web converter** - free, no sign-up, no ads: [unlocoder.com](https://unlocoder.com)
 
-**REST API** &mdash; programmatic access via [RapidAPI](https://rapidapi.com/contactliamnoonan/api/unlocoder)
+**REST API** - programmatic access via [RapidAPI](https://rapidapi.com/contactliamnoonan/api/unlocoder)
 
-**MCP Server** &mdash; give AI agents coordinate conversion and UN/LOCODE lookup capabilities, available via [RapidAPI MCP](https://rapidapi.com/contactliamnoonan/api/unlocoder)
+**MCP Server** - give AI agents coordinate conversion and UN/LOCODE lookup capabilities, available via [RapidAPI MCP](https://rapidapi.com/contactliamnoonan/api/unlocoder)
 
 ### Supported Formats
 
@@ -44,20 +44,20 @@ Unlocoder is a coordinate conversion tool and one of the few UN/LOCODE APIs avai
 
 ### Key Features
 
-- **Auto-detection** &mdash; paste any format, the system identifies it
-- **Configurable precision** &mdash; 4 to 10 decimal places
-- **UN/LOCODE enrichment** &mdash; timezone, UTC offset, local time, elevation, and nearby locations
-- **Nearby UN/LOCODE search** &mdash; find the closest ports/locations to any coordinate
-- **MCP support** &mdash; connect AI agents (Claude, GPT, etc.) to Unlocoder as a tool via the Model Context Protocol
+- **Auto-detection** - paste any format, the system identifies it
+- **Configurable precision** - 4 to 10 decimal places
+- **UN/LOCODE enrichment** - timezone, UTC offset, local time, elevation, IATA codes, function codes, and status
+- **Nearby UN/LOCODE search** - find the closest ports/locations to any coordinate
+- **MCP support** - connect AI agents (Claude, GPT, etc.) to Unlocoder as a tool via the Model Context Protocol
 
 ### UN/LOCODE Data
 
 Programmatic access to UN/LOCODE data is surprisingly hard to find online. Unlocoder provides dedicated endpoints for:
 
-- **UN/LOCODE lookup** &mdash; resolve any code (e.g. `GBLON`, `USNYC`) to coordinates, timezone, UTC offset, local time, and elevation
-- **Nearby search** &mdash; find the closest UN/LOCODEs to any coordinate pair (up to 3 results within 5000km)
-- **Enriched data** &mdash; goes beyond the raw UNECE directory with timezone resolution, elevation, and confidence scoring
-- **Continuously updated** &mdash; ingested from official UNECE sources, not static CSV dumps
+- **UN/LOCODE lookup** - resolve any code (e.g. `GBLON`, `USNYC`) to coordinates, timezone, UTC offset, local time, and elevation
+- **Nearby search** - find the closest UN/LOCODEs to any coordinate pair (up to 3 results within 5000km)
+- **Enriched data** - goes beyond the raw UNECE directory with timezone resolution, elevation, IATA airport codes, decoded function codes, and confidence scoring
+- **Continuously updated** - ingested from official UNECE sources, not static CSV dumps
 
 Ideal for logistics platforms, freight forwarders, customs software, TMS/WMS systems, and any application that works with international trade locations.
 
@@ -108,8 +108,23 @@ curl -X POST "https://unlocoder.p.rapidapi.com/api/convert" \
     "Mgrs": "30UXC9937510099",
     "PlusCode": "9C3XGV4C+HQ"
   },
+  "location": {
+    "code": "GBLON",
+    "name": "London",
+    "country": "GB",
+    "subdivision": "LND",
+    "function": "1234----",
+    "status": "AI",
+    "timezoneId": "Europe/London",
+    "utcOffset": "+00:00",
+    "localTime": "2026-03-08 14:30:00",
+    "elevationMeters": 11,
+    "nearestCityName": "London",
+    "nearestCityCountry": "GB",
+    "nearestCityDistanceKm": 0
+  },
   "nearbyUnLocodes": [
-    { "code": "GBLON", "name": "London", "distanceKm": 1.2 }
+    { "code": "GBTIL", "name": "Tilbury", "function": "1-------", "distanceKm": 3.2 }
   ]
 }
 ```
@@ -138,8 +153,8 @@ POST /api/convert
 | `latitude` / `longitude` | Parsed coordinates |
 | `detectedFormat` | Which format was detected |
 | `outputs` | All converted formats |
-| `location` | UN/LOCODE enrichment (if input was a UN/LOCODE) |
-| `nearbyUnLocodes` | Up to 3 nearest UN/LOCODEs within 5000km |
+| `location` | UN/LOCODE enrichment: timezone, elevation, function codes, IATA, status |
+| `nearbyUnLocodes` | Up to 3 nearest UN/LOCODEs with distance, function codes, IATA, and status |
 
 ### Lookup UN/LOCODE
 
@@ -154,7 +169,7 @@ GET /unlocodes/{code}
 | `code` | path | UN/LOCODE, e.g. `GBLON` or `GB LON` |
 | `referenceTime` | query | Optional ISO 8601 datetime for historical timezone offset |
 
-**Response includes:** country, location name, subdivision, coordinates, timezone ID, UTC offset, local time, elevation, confidence score, and enrichment timestamp.
+**Response includes:** country, location name, subdivision, coordinates, timezone ID, UTC offset, local time, elevation, function codes, IATA code (for airports), status, confidence score, and enrichment timestamp.
 
 **Example:**
 
@@ -217,4 +232,4 @@ The web converter at [unlocoder.com](https://unlocoder.com) is always free (rate
 
 ---
 
-<p align="center">&copy; 2025 Unlocoder</p>
+<p align="center">&copy; 2025-2026 Unlocoder</p>
